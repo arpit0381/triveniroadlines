@@ -52,7 +52,6 @@ export default function App() {
       <nav className="navbar">
         <div className="container">
           <div className="nav-brand" onClick={() => navigateTo('HOME')}>
-            <img src={logo} alt="Triveni Road Lines" className="nav-brand-logo" />
             <div>
               <h2>Triveni Road Lines</h2>
               <span>Transport & Logistics</span>
