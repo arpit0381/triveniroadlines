@@ -21,9 +21,9 @@ const fleetData = [
 ];
 
 const routes = [
-  'Delhi → Mumbai', 'Delhi → Kolkata', 'Delhi → Chennai', 'Mumbai → Bangalore',
-  'Jaipur → Ahmedabad', 'Lucknow → Patna', 'Hyderabad → Pune', 'Chennai → Kochi',
-  'Chandigarh → Jammu', 'Indore → Nagpur', 'Guwahati → Siliguri', 'Surat → Rajkot',
+  'Kanpur → Mumbai', 'Kanpur → Kolkata', 'Kanpur → Chennai', 'Kanpur → Bangalore',
+  'Kanpur → Ahmedabad', 'Kanpur → Patna', 'Kanpur → Pune', 'Kanpur → Kochi',
+  'Kanpur → Jammu', 'Kanpur → Nagpur', 'Kanpur → Siliguri', 'Kanpur → Rajkot',
 ];
 
 export default function App() {
@@ -39,8 +39,8 @@ export default function App() {
     }
   }, [theme]);
 
-  useEffect(() => { 
-    window.scrollTo(0, 0); 
+  useEffect(() => {
+    window.scrollTo(0, 0);
     setIsMobileMenuOpen(false);
   }, [page]);
 
@@ -52,13 +52,14 @@ export default function App() {
       <nav className="navbar">
         <div className="container">
           <div className="nav-brand" onClick={() => navigateTo('HOME')}>
+            <img src={logo} alt="Triveni Road Lines" className="nav-brand-logo" />
             <div>
               <h2>Triveni Road Lines</h2>
               <span>Transport & Logistics</span>
             </div>
           </div>
           <div className={`nav-links ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
-            {['HOME','SERVICES','FLEET','ABOUT','CONTACT'].map(p => (
+            {['HOME', 'SERVICES', 'FLEET', 'ABOUT', 'CONTACT'].map(p => (
               <button key={p} className={`nav-link ${page === p ? 'active' : ''}`} onClick={() => navigateTo(p)}>
                 {p.charAt(0) + p.slice(1).toLowerCase()}
               </button>
@@ -79,11 +80,11 @@ export default function App() {
 
       <main>
         {page === 'HOME' && <HomePage navigateTo={navigateTo} />}
-        {page === 'SERVICES' && <ServicesPage />}
+        {page === 'SERVICES' && <ServicesPage navigateTo={navigateTo} />}
         {page === 'FLEET' && <FleetPage />}
-
         {page === 'ABOUT' && <AboutPage navigateTo={navigateTo} />}
         {page === 'CONTACT' && <ContactPage />}
+        {page.startsWith('SERVICE_') && <ServiceDetailPage service={servicesData.find(s => `SERVICE_${s.id}` === page)} navigateTo={navigateTo} />}
       </main>
 
       {/* Footer */}
@@ -115,7 +116,7 @@ export default function App() {
 
             <div className="footer-col">
               <h4>Quick Links</h4>
-              {['HOME','SERVICES','FLEET','ABOUT','CONTACT'].map(p => (
+              {['HOME', 'SERVICES', 'FLEET', 'ABOUT', 'CONTACT'].map(p => (
                 <button key={p} className="footer-link" onClick={() => navigateTo(p)}>
                   {p.charAt(0) + p.slice(1).toLowerCase()}
                 </button>
@@ -124,26 +125,26 @@ export default function App() {
 
             <div className="footer-col">
               <h4>Services</h4>
-              <span className="footer-link">Full Truck Load</span>
-              <span className="footer-link">Part Truck Load</span>
-              <span className="footer-link">ODC Transport</span>
-              <span className="footer-link">Warehousing</span>
-              <span className="footer-link">Fleet Management</span>
+              <button className="footer-link" onClick={() => navigateTo('SERVICE_1')}>Full Truck Load</button>
+              <button className="footer-link" onClick={() => navigateTo('SERVICE_2')}>Part Truck Load</button>
+              <button className="footer-link" onClick={() => navigateTo('SERVICE_3')}>ODC Transport</button>
+              <button className="footer-link" onClick={() => navigateTo('SERVICE_4')}>Warehousing</button>
+              <button className="footer-link" onClick={() => navigateTo('SERVICE_5')}>Fleet Management</button>
             </div>
 
             <div className="footer-col">
               <h4>Get in Touch</h4>
               <div className="footer-contact-item">
                 <div className="footer-contact-icon">📍</div>
-                <div><strong>Head Office</strong><p>Transport Nagar, GT Road, Kanpur, UP 208023</p></div>
+                <div><strong>Head Office</strong><p>A 19 chakarpur mandi kanpur</p></div>
               </div>
               <div className="footer-contact-item">
                 <div className="footer-contact-icon">📞</div>
-                <div><strong>Phone</strong><p>+91 98765 43210</p></div>
+                <div><strong>Phone</strong><p>+91 88539 22538</p></div>
               </div>
               <div className="footer-contact-item">
                 <div className="footer-contact-icon">✉️</div>
-                <div><strong>Email</strong><p>info@triveniroadlines.in</p></div>
+                <div><strong>Email</strong><p>triveniroadlines.in@gmail.com</p></div>
               </div>
             </div>
           </div>
@@ -196,7 +197,7 @@ function HomePage({ navigateTo }) {
           </div>
           <div className="services-grid">
             {servicesData.slice(0, 3).map((s, i) => (
-              <div key={s.id} className={`service-card fade-up d${i + 1}`}>
+              <div key={s.id} className={`service-card fade-up d${i + 1}`} onClick={() => navigateTo(`SERVICE_${s.id}`)} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
@@ -276,7 +277,7 @@ function HomePage({ navigateTo }) {
 }
 
 /* ===================== SERVICES PAGE ===================== */
-function ServicesPage() {
+function ServicesPage({ navigateTo }) {
   return (
     <>
       <div className="about-hero">
@@ -287,7 +288,7 @@ function ServicesPage() {
         <div className="container">
           <div className="services-grid">
             {servicesData.map((s, i) => (
-              <div key={s.id} className={`service-card fade-up d${(i % 3) + 1}`}>
+              <div key={s.id} className={`service-card fade-up d${(i % 3) + 1}`} onClick={() => navigateTo(`SERVICE_${s.id}`)} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
@@ -382,7 +383,7 @@ function AboutPage({ navigateTo }) {
           <div className="about-content">
             <div className="about-text fade-up">
               <h2>Built on Trust, Driven by Commitment</h2>
-              <p>Triveni Road Lines was founded in 2010 with a small fleet of 5 trucks operating on the Delhi-Mumbai corridor. Today, we are one of North India's fastest-growing road transport companies with a fleet of 500+ vehicles covering 25+ states.</p>
+              <p>Triveni Road Lines was founded in 2010 with a small fleet of 5 trucks operating on the Kanpur-Mumbai corridor. Today, we are one of North India's fastest-growing road transport companies with a fleet of 500+ vehicles covering 25+ states.</p>
               <p>Our mission is to deliver cargo safely, on time, and at competitive rates — while building long-term partnerships with businesses who depend on us.</p>
               <ul className="values-list">
                 <li>On-time delivery with live GPS tracking</li>
@@ -439,15 +440,15 @@ function ContactPage() {
 
               <div className="contact-info-card">
                 <div className="contact-info-icon">📍</div>
-                <div><h4>Head Office</h4><p>Transport Nagar, GT Road, Kanpur, UP 208023</p></div>
+                <div><h4>Head Office</h4><p>A 19 chakarpur mandi kanpur</p></div>
               </div>
               <div className="contact-info-card">
                 <div className="contact-info-icon">📞</div>
-                <div><h4>Phone</h4><p>+91 98765 43210 (24/7 Control Room)</p></div>
+                <div><h4>Phone</h4><p>+91 88539 22538 (24/7 Control Room)</p></div>
               </div>
               <div className="contact-info-card">
                 <div className="contact-info-icon">✉️</div>
-                <div><h4>Email</h4><p>info@triveniroadlines.in</p></div>
+                <div><h4>Email</h4><p>triveniroadlines.in@gmail.com</p></div>
               </div>
               <div className="contact-info-card">
                 <div className="contact-info-icon">⏰</div>
@@ -472,7 +473,7 @@ function ContactPage() {
                   </div>
                   <div className="form-group"><label>Email</label><input className="form-input" type="email" placeholder="email@example.com" value={form.email} onChange={update('email')} /></div>
                   <div className="form-row">
-                    <div className="form-group"><label>Pickup City *</label><input className="form-input" placeholder="e.g. Delhi" value={form.pickup} onChange={update('pickup')} required /></div>
+                    <div className="form-group"><label>Pickup City *</label><input className="form-input" placeholder="e.g. Kanpur" value={form.pickup} onChange={update('pickup')} required /></div>
                     <div className="form-group"><label>Drop City *</label><input className="form-input" placeholder="e.g. Mumbai" value={form.drop} onChange={update('drop')} required /></div>
                   </div>
                   <div className="form-row">
@@ -483,6 +484,61 @@ function ContactPage() {
                   <button type="submit" className="form-submit">Send Enquiry</button>
                 </form>
               )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+/* ===================== SERVICE DETAIL PAGE ===================== */
+function ServiceDetailPage({ service, navigateTo }) {
+  if (!service) return null;
+  return (
+    <>
+      <div className="about-hero">
+        <h1 className="fade-up">{service.title}</h1>
+        <p className="fade-up d1">{service.desc}</p>
+      </div>
+      <section className="section">
+        <div className="container">
+          <div className="about-content">
+            <div className="about-text fade-up">
+              <h2>Expertise in {service.title}</h2>
+              <p>Triveni Roadlines specializes in delivering top-tier {service.title.toLowerCase()} services tailored to meet the dynamic needs of modern businesses. With our extensive network and dedicated infrastructure, we ensure your cargo is handled with the utmost care and professionalism.</p>
+              <p>Our commitment to reliability, speed, and safety makes us the preferred logistics partner. Whether it's a single consignment or a complex supply chain requirement, our team is equipped to deliver exceptional results.</p>
+              <ul className="values-list">
+                <li>End-to-end operational transparency</li>
+                <li>Highly trained professionals handling your cargo</li>
+                <li>24/7 dedicated customer support</li>
+                <li>Cost-effective and timely execution</li>
+              </ul>
+              <div style={{ marginTop: '2rem' }}>
+                <button className="btn-primary" onClick={() => navigateTo('CONTACT')}>Book This Service</button>
+              </div>
+            </div>
+            <div className="why-grid fade-up d2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+              <div className="why-card">
+                <div className="why-icon">⚡</div>
+                <h4>Fast Execution</h4>
+                <p>Streamlined processes for quick turnaround times.</p>
+              </div>
+              <div className="why-card">
+                <div className="why-icon">🛡️</div>
+                <h4>Secure Handling</h4>
+                <p>Advanced safety measures to protect your assets.</p>
+              </div>
+              <div className="why-card">
+                <div className="why-icon">📊</div>
+                <h4>Live Tracking</h4>
+                <p>Real-time updates on your service status.</p>
+              </div>
+              <div className="why-card">
+                <div className="why-icon">🤝</div>
+                <h4>Dedicated Support</h4>
+                <p>A single point of contact for all your queries.</p>
+              </div>
             </div>
           </div>
         </div>
