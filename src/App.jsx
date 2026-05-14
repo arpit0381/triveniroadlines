@@ -1,485 +1,470 @@
 import React, { useState, useEffect } from 'react';
+import './index.css';
 
-const commoditiesData = [
-  { id: 1, name: "Fresh Spinach", category: "Leafy Greens", emoji: "🥬", badge: "Daily Arrival", desc: "Sourced directly from local farms every morning. Available in wholesale quantities for retailers." },
-  { id: 2, name: "Premium Carrots", category: "Root Veggies", emoji: "🥕", badge: "High Demand", desc: "Premium quality carrots for bulk buyers, hotels, and supermarkets." },
-  { id: 3, name: "Green Broccoli", category: "Exotic Veggies", emoji: "🥦", badge: "Seasonal", desc: "Fresh exotic vegetables available for commercial kitchens and fine dining restaurants." },
-  { id: 4, name: "Juicy Tomatoes", category: "Fruits & Veggies", emoji: "🍅", badge: "Top Traded", desc: "High-grade tomatoes supplied in crates. Consistent bulk supply guaranteed." },
-  { id: 5, name: "Golden Potatoes", category: "Roots & Bulbs", emoji: "🥔", badge: "All Season", desc: "Cold storage and fresh potatoes available in standard 50kg bags." },
-  { id: 6, name: "Sweet Green Peas", category: "Legumes", emoji: "🫛", badge: "Seasonal", desc: "Fresh green peas sourced from top growing regions during the season." },
-  { id: 7, name: "Mixed Bell Peppers", category: "Exotic Veggies", emoji: "🫑", badge: "High Demand", desc: "Vibrant mix of red, yellow, and green peppers for wholesale trade." },
-  { id: 8, name: "Red Onions", category: "Roots & Bulbs", emoji: "🧅", badge: "Top Traded", desc: "Premium varieties available in bulk packaging. Perfect for long-term supply." },
-  { id: 9, name: "Fresh Cabbage", category: "Leafy Greens", emoji: "🥬", badge: "All Season", desc: "Firm and crisp green cabbage heads available for daily bulk dispatch." },
-  { id: 10, name: "Purple Eggplant", category: "Fruits & Veggies", emoji: "🍆", badge: "Daily Arrival", desc: "Glossy purple eggplants supplied directly from trusted farmers." },
-  { id: 11, name: "White Garlic", category: "Roots & Bulbs", emoji: "🧄", badge: "Top Traded", desc: "Aromatic and pungent garlic bulbs. Available for bulk purchase all year." },
-  { id: 12, name: "Button Mushrooms", category: "Exotic Veggies", emoji: "🍄", badge: "High Demand", desc: "Earthy and tender button mushrooms, packed carefully for wholesale distribution." }
+const servicesData = [
+  { id: 1, icon: '🚛', title: 'Full Truck Load (FTL)', desc: 'Dedicated trucks for large shipments across India. Door-to-door delivery with real-time tracking and guaranteed timelines.' },
+  { id: 2, icon: '📦', title: 'Part Truck Load (PTL)', desc: 'Cost-effective shared trucking for smaller consignments. Consolidated loads with scheduled departures on all major routes.' },
+  { id: 3, icon: '🏗️', title: 'ODC Transport', desc: 'Over Dimensional Cargo handled with specialized trailers, permits, and pilot vehicles for heavy machinery & industrial equipment.' },
+  { id: 4, icon: '🏭', title: 'Warehousing', desc: 'Secure warehousing facilities at key locations with inventory management, cross-docking, and distribution support.' },
+  { id: 5, icon: '📋', title: 'Fleet Management', desc: 'End-to-end fleet solutions including vehicle maintenance, driver management, fuel monitoring, and route optimization.' },
+  { id: 6, icon: '🌐', title: 'Pan-India Network', desc: 'Extensive branch network covering 25+ states with dedicated regional teams for seamless last-mile delivery.' },
 ];
 
-const categories = ["Leafy Greens", "Root Veggies", "Exotic Veggies", "Fruits & Veggies", "Roots & Bulbs", "Legumes"];
+const fleetData = [
+  { id: 1, emoji: '🚛', name: 'Tata Prima 4928', type: 'Heavy Duty Truck', specs: ['28 Ton', 'All India', 'GPS Enabled'] },
+  { id: 2, emoji: '🚚', name: 'Ashok Leyland 3520', type: 'Medium Duty Truck', specs: ['20 Ton', 'Regional', 'GPS Enabled'] },
+  { id: 3, emoji: '🛻', name: 'Eicher Pro 3019', type: 'Light Commercial', specs: ['10 Ton', 'City Routes', 'Fast Delivery'] },
+  { id: 4, emoji: '🚜', name: 'Multi-Axle Trailer', type: 'ODC Specialist', specs: ['50+ Ton', 'ODC Permit', 'Pilot Vehicle'] },
+  { id: 5, emoji: '📦', name: 'Container Carrier', type: '20ft / 40ft Containers', specs: ['20-30 Ton', 'Port Service', 'Sealed'] },
+  { id: 6, emoji: '🧊', name: 'Refrigerated Van', type: 'Cold Chain Logistics', specs: ['8 Ton', 'Temp Control', 'Perishables'] },
+];
 
-const css = `
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap');
-
-:root {
-  --green-dark: #1a472a;
-  --green-mid: #2d6a4f;
-  --green-fresh: #40916c;
-  --green-pale: #e8f5e9;
-  --cream: #fef9f0;
-  --orange: #e07b39;
-  --text-dark: #1a2e1a;
-  --text-muted: #5e7a5e;
-  --white: #ffffff;
-  --shadow-sm: 0 4px 12px rgba(26, 71, 42, 0.05);
-  --shadow-md: 0 8px 24px rgba(26, 71, 42, 0.08);
-  --radius-md: 12px;
-  --radius-lg: 24px;
-  --transition: all 0.3s ease;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Nunito', sans-serif; background-color: var(--cream); color: var(--text-dark); overflow-x: hidden; }
-h1, h2, h3, h4, .playfair { font-family: 'Playfair Display', serif; }
-
-/* Utilities */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-.flex { display: flex; } .flex-col { display: flex; flex-direction: column; }
-.items-center { align-items: center; } .justify-between { justify-content: space-between; } .justify-center { justify-content: center; }
-.gap-2 { gap: 0.5rem; } .gap-4 { gap: 1rem; } .gap-6 { gap: 1.5rem; } .gap-8 { gap: 2rem; }
-.grid { display: grid; } .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); } .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-.text-center { text-align: center; }
-.w-full { width: 100%; } .h-full { height: 100%; }
-.py-4 { padding-top: 1rem; padding-bottom: 1rem; } .py-8 { padding-top: 2rem; padding-bottom: 2rem; } .py-16 { padding-top: 4rem; padding-bottom: 4rem; } .py-20 { padding-top: 6rem; padding-bottom: 6rem; }
-.px-2 { padding-left: 0.5rem; padding-right: 0.5rem; } .px-4 { padding-left: 1rem; padding-right: 1rem; } .p-6 { padding: 1.5rem; } .p-8 { padding: 2rem; } .p-10 { padding: 2.5rem; }
-.mb-2 { margin-bottom: 0.5rem; } .mb-4 { margin-bottom: 1rem; } .mb-6 { margin-bottom: 1.5rem; } .mb-8 { margin-bottom: 2rem; }
-.text-sm { font-size: 0.875rem; } .text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; } .text-2xl { font-size: 1.5rem; }
-.text-3xl { font-size: 1.875rem; } .text-4xl { font-size: 2.25rem; } .text-5xl { font-size: 3rem; } .text-6xl { font-size: 4rem; }
-.font-bold { font-weight: 700; } .font-black { font-weight: 900; }
-.text-muted { color: var(--text-muted); } .text-green { color: var(--green-mid); }
-.bg-white { background-color: var(--white); } .bg-green-pale { background-color: var(--green-pale); }
-.rounded-lg { border-radius: var(--radius-lg); } .rounded-md { border-radius: var(--radius-md); } .rounded-full { border-radius: 999px; }
-.shadow-sm { box-shadow: var(--shadow-sm); } .shadow-md { box-shadow: var(--shadow-md); }
-.cursor-pointer { cursor: pointer; }
-
-/* Buttons & Inputs */
-button { border: none; background: none; font-family: 'Nunito', sans-serif; transition: var(--transition); cursor: pointer; }
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 2rem; border-radius: var(--radius-full); font-weight: 700; font-size: 1.1rem; gap: 0.5rem; transition: var(--transition); }
-.btn-primary { background-color: var(--green-dark); color: var(--white); }
-.btn-primary:hover { background-color: var(--green-mid); transform: translateY(-3px); box-shadow: var(--shadow-md); }
-.btn-outline { border: 2px solid var(--green-mid); color: var(--green-dark); }
-.btn-outline:hover { background-color: var(--green-pale); transform: translateY(-3px); }
-input:not([type="radio"]), select, textarea { width: 100%; padding: 1rem; border: 1px solid #c2d1c2; border-radius: var(--radius-md); font-family: 'Nunito', sans-serif; background-color: var(--white); font-size: 1rem; transition: var(--transition); }
-input:not([type="radio"]):focus, select:focus, textarea:focus { outline: none; border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.2); }
-input[type="radio"] { cursor: pointer; accent-color: var(--green-dark); width: 1.2rem; height: 1.2rem; }
-
-/* Animations */
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-.fade-in-up { animation: fadeInUp 0.6s ease forwards; opacity: 0; }
-.delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; }
-
-/* Navbar */
-.navbar { position: sticky; top: 0; z-index: 100; background-color: rgba(254, 249, 240, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(26, 71, 42, 0.1); }
-.nav-logo { display: flex; align-items: center; gap: 0.75rem; color: var(--green-dark); }
-.nav-links { display: flex; gap: 2.5rem; }
-.nav-link { font-weight: 700; color: var(--text-dark); position: relative; padding: 0.5rem 0; font-size: 1.1rem; }
-.nav-link:hover, .nav-link.active { color: var(--green-mid); }
-.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background-color: var(--green-mid); transition: var(--transition); border-radius: 3px; }
-.nav-link:hover::after, .nav-link.active::after { width: 100%; }
-
-/* Hero Section */
-.hero { min-height: 85vh; display: flex; align-items: center; position: relative; overflow: hidden; }
-.hero-content { max-width: 650px; z-index: 10; position: relative; }
-.hero-tag { display: inline-block; background-color: var(--green-pale); color: var(--green-dark); padding: 0.5rem 1.25rem; border-radius: var(--radius-full); font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
-.hero-bg-shape { position: absolute; right: -5%; top: -10%; width: 55%; height: 120%; background-color: var(--green-pale); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; z-index: 0; opacity: 0.6; }
-.hero-emoji-grid { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; z-index: 10; }
-.hero-floating-box { background: var(--white); padding: 2rem; border-radius: var(--radius-lg); font-size: 4rem; box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; }
-
-/* Cards */
-.commodity-card { background: var(--white); border-radius: var(--radius-lg); padding: 2rem; text-align: center; box-shadow: var(--shadow-sm); transition: var(--transition); border: 1px solid rgba(26, 71, 42, 0.05); display: flex; flex-direction: column; align-items: center; }
-.commodity-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: var(--green-pale); }
-.emoji-circle { width: 100px; height: 100px; background-color: var(--green-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; margin-bottom: 1.5rem; }
-.badge { display: inline-block; padding: 0.35rem 1rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem; }
-.badge-orange { background-color: rgba(224, 123, 57, 0.1); color: var(--orange); }
-.badge-green { background-color: var(--green-pale); color: var(--green-dark); }
-
-/* Feature Section */
-.feature-box { background: var(--white); padding: 3rem 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); transition: var(--transition); text-align: center; }
-.feature-box:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-.feature-icon { font-size: 3rem; margin-bottom: 1.5rem; }
-
-/* Footer */
-footer { background-color: var(--green-dark); color: var(--white); padding: 4rem 0 2rem; margin-top: 4rem; }
-.footer-link { color: rgba(255,255,255,0.7); display: block; margin-bottom: 0.75rem; text-decoration: none; font-weight: 600; transition: var(--transition); }
-.footer-link:hover { color: var(--white); }
-
-/* Responsive */
-@media (max-width: 992px) {
-  .hero-bg-shape, .hero-emoji-grid { display: none; }
-  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
-  .hero { text-align: center; } .hero-content { margin: 0 auto; }
-}
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .grid-cols-3 { grid-template-columns: repeat(1, 1fr); }
-  .grid-cols-2 { grid-template-columns: repeat(1, 1fr); }
-  .text-6xl { font-size: 3rem; }
-}
-`;
+const routes = [
+  'Delhi → Mumbai', 'Delhi → Kolkata', 'Delhi → Chennai', 'Mumbai → Bangalore',
+  'Jaipur → Ahmedabad', 'Lucknow → Patna', 'Hyderabad → Pune', 'Chennai → Kochi',
+  'Chandigarh → Jammu', 'Indore → Nagpur', 'Guwahati → Siliguri', 'Surat → Rajkot',
+];
 
 export default function App() {
   const [page, setPage] = useState('HOME');
-  const [enquiryCommodity, setEnquiryCommodity] = useState('');
 
-  // Scroll to top on page change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [page]);
+  useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
-  const navigateTo = (newPage) => {
-    setPage(newPage);
-  };
-
-  const handleEnquire = (commodityName) => {
-    setEnquiryCommodity(commodityName);
-    navigateTo('CONTACT');
-  };
+  const navigateTo = (p) => setPage(p);
 
   return (
     <>
-      <style>{css}</style>
-      
       {/* Navbar */}
-      <nav className="navbar py-4">
-        <div className="container flex items-center justify-between">
-          <div className="nav-logo cursor-pointer" onClick={() => navigateTo('HOME')}>
-            <span style={{ fontSize: '2.5rem' }}>🌾</span>
+      <nav className="navbar">
+        <div className="container">
+          <div className="nav-brand" onClick={() => navigateTo('HOME')}>
+            <div className="nav-brand-icon">TR</div>
             <div>
-              <div className="playfair font-black text-2xl" style={{ lineHeight: 1 }}>Triveniroadlines.in</div>
-              <span className="text-sm font-bold text-muted uppercase tracking-widest mt-1 block">Wholesale Aadhti</span>
+              <h2>Triveni Road Lines</h2>
+              <span>Transport & Logistics</span>
             </div>
           </div>
-          
           <div className="nav-links">
-            <button className={`nav-link ${page === 'HOME' ? 'active' : ''}`} onClick={() => navigateTo('HOME')}>Home</button>
-            <button className={`nav-link ${page === 'COMMODITIES' ? 'active' : ''}`} onClick={() => navigateTo('COMMODITIES')}>Commodities</button>
-            <button className={`nav-link ${page === 'ABOUT' ? 'active' : ''}`} onClick={() => navigateTo('ABOUT')}>About Us</button>
-            <button className={`nav-link ${page === 'CONTACT' ? 'active' : ''}`} onClick={() => navigateTo('CONTACT')}>Contact</button>
+            {['HOME','SERVICES','FLEET','ABOUT','CONTACT'].map(p => (
+              <button key={p} className={`nav-link ${page === p ? 'active' : ''}`} onClick={() => navigateTo(p)}>
+                {p.charAt(0) + p.slice(1).toLowerCase()}
+              </button>
+            ))}
           </div>
-          
-          <div className="hidden md:block">
-            <button className="btn btn-primary" onClick={() => navigateTo('CONTACT')}>Get Latest Rates</button>
-          </div>
+          <button className="nav-cta" onClick={() => navigateTo('CONTACT')}>Book Now</button>
         </div>
       </nav>
 
-      <main style={{ minHeight: '80vh' }}>
+      <main>
         {page === 'HOME' && <HomePage navigateTo={navigateTo} />}
-        {page === 'COMMODITIES' && <CommoditiesPage handleEnquire={handleEnquire} />}
+        {page === 'SERVICES' && <ServicesPage />}
+        {page === 'FLEET' && <FleetPage />}
+
         {page === 'ABOUT' && <AboutPage navigateTo={navigateTo} />}
-        {page === 'CONTACT' && <ContactPage enquiryCommodity={enquiryCommodity} />}
+        {page === 'CONTACT' && <ContactPage />}
       </main>
 
       {/* Footer */}
       <footer>
-        <div className="container grid grid-cols-3 gap-12 mb-12">
-          <div>
-            <div className="flex items-center gap-2 text-3xl font-black playfair mb-4 text-green-pale">🌾 Triveniroadlines.in</div>
-            <p className="text-sm opacity-80 mb-6 leading-relaxed">Your trusted wholesale commission agent (Aadhti). Connecting farmers and bulk buyers with transparency, best rates, and seamless trade.</p>
+        <div className="container">
+          {/* CTA Banner */}
+          <div className="cta-banner">
+            <div>
+              <h2>Ready to Ship Your Cargo?</h2>
+              <p>Get competitive rates, dedicated support, and on-time delivery across India. Let's move your business forward.</p>
+            </div>
+            <button className="btn-primary" onClick={() => navigateTo('CONTACT')}>Book Now →</button>
           </div>
-          <div>
-            <h4 className="font-bold playfair text-xl mb-6 text-green-pale">Quick Links</h4>
-            <span className="footer-link cursor-pointer" onClick={() => navigateTo('HOME')}>Home</span>
-            <span className="footer-link cursor-pointer" onClick={() => navigateTo('COMMODITIES')}>Commodities</span>
-            <span className="footer-link cursor-pointer" onClick={() => navigateTo('ABOUT')}>About Us</span>
-            <span className="footer-link cursor-pointer" onClick={() => navigateTo('CONTACT')}>Contact Us</span>
+
+          <div className="footer-grid">
+            <div className="footer-brand">
+              <div className="footer-brand-top">
+                <div className="footer-brand-logo">TR</div>
+                <h3>Triveni Road Lines</h3>
+              </div>
+              <p>Your trusted partner for road transport and logistics solutions across India. Delivering reliability, speed, and safety since 2010.</p>
+              <div className="footer-socials">
+                <div className="footer-social">📘</div>
+                <div className="footer-social">🐦</div>
+                <div className="footer-social">📸</div>
+                <div className="footer-social">💼</div>
+              </div>
+            </div>
+
+            <div className="footer-col">
+              <h4>Quick Links</h4>
+              {['HOME','SERVICES','FLEET','ABOUT','CONTACT'].map(p => (
+                <button key={p} className="footer-link" onClick={() => navigateTo(p)}>
+                  {p.charAt(0) + p.slice(1).toLowerCase()}
+                </button>
+              ))}
+            </div>
+
+            <div className="footer-col">
+              <h4>Services</h4>
+              <span className="footer-link">Full Truck Load</span>
+              <span className="footer-link">Part Truck Load</span>
+              <span className="footer-link">ODC Transport</span>
+              <span className="footer-link">Warehousing</span>
+              <span className="footer-link">Fleet Management</span>
+            </div>
+
+            <div className="footer-col">
+              <h4>Get in Touch</h4>
+              <div className="footer-contact-item">
+                <div className="footer-contact-icon">📍</div>
+                <div><strong>Head Office</strong><p>Transport Nagar, GT Road, Kanpur, UP 208023</p></div>
+              </div>
+              <div className="footer-contact-item">
+                <div className="footer-contact-icon">📞</div>
+                <div><strong>Phone</strong><p>+91 98765 43210</p></div>
+              </div>
+              <div className="footer-contact-item">
+                <div className="footer-contact-icon">✉️</div>
+                <div><strong>Email</strong><p>info@triveniroadlines.in</p></div>
+              </div>
+            </div>
           </div>
-          <div>
-            <h4 className="font-bold playfair text-xl mb-6 text-green-pale">Mandi Address</h4>
-            <p className="opacity-80 mb-2">Shop No. 45, Block A</p>
-            <p className="opacity-80 mb-2">Main Wholesale Sabzi Mandi</p>
-            <p className="opacity-80 mb-4">Kanpur, UP 208001</p>
-            <p className="font-bold">📞 +91 98765 43210</p>
+
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Triveni Road Lines. All rights reserved.</span>
+            <div className="footer-bottom-links">
+              <span>Privacy Policy</span>
+              <span>Terms of Service</span>
+              <span>Sitemap</span>
+            </div>
           </div>
-        </div>
-        <div className="container pt-8 border-t border-white/20 text-center text-sm opacity-60">
-          © {new Date().getFullYear()} Triveniroadlines.in. All rights reserved.
         </div>
       </footer>
     </>
   );
 }
 
-// --- HOME PAGE ---
+/* ===================== HOME PAGE ===================== */
 function HomePage({ navigateTo }) {
   return (
-    <div>
-      {/* Hero */}
-      <section className="hero container">
-        <div className="hero-bg-shape"></div>
-        <div className="hero-emoji-grid">
-          <div className="hero-floating-box" style={{ transform: 'translateY(20px)' }}>🥔</div>
-          <div className="hero-floating-box" style={{ transform: 'translateY(-20px)' }}>🧅</div>
-          <div className="hero-floating-box" style={{ transform: 'translateY(-40px)' }}>🍅</div>
-          <div className="hero-floating-box" style={{ transform: 'translateY(10px)' }}>🧄</div>
-        </div>
-        
-        <div className="hero-content fade-in-up">
-          <span className="hero-tag">Trusted Aadhti Since 2010</span>
-          <h1 className="text-6xl font-black playfair mb-6" style={{ lineHeight: 1.15 }}>Bridging Farmers & Bulk Buyers.</h1>
-          <p className="text-xl text-muted mb-10 leading-relaxed">
-            We deal in wholesale quantities of fresh vegetables and roots. Ensuring the best market rates for farmers and consistent quality supply for vendors and hotels.
-          </p>
-          <div className="flex gap-4">
-            <button className="btn btn-primary" onClick={() => navigateTo('COMMODITIES')}>View Commodities</button>
-            <button className="btn btn-outline" onClick={() => navigateTo('CONTACT')}>Enquire Rates</button>
-          </div>
-        </div>
-      </section>
-
-      {/* How We Work */}
-      <section className="bg-green-pale py-20">
+    <>
+      <section className="hero">
         <div className="container">
-          <div className="text-center mb-16 fade-in-up">
-            <h2 className="text-4xl font-black playfair mb-4">How We Operate in the Mandi</h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto">Transparency, speed, and reliability are the core of our wholesale trade.</p>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-12">
-            <div className="feature-box fade-in-up delay-1">
-              <div className="feature-icon">🧑‍🌾</div>
-              <h3 className="text-2xl font-bold playfair mb-4">For Farmers (Kisan)</h3>
-              <p className="text-muted leading-relaxed mb-6">Bring your fresh harvest to our shop. We ensure your produce is auctioned properly to get you the highest possible mandi rate. Same-day transparent payments guaranteed.</p>
-              <ul className="text-left text-sm font-bold text-green-dark flex flex-col gap-2 mx-auto" style={{ maxWidth: '200px' }}>
-                <li>✓ Best Market Rates</li>
-                <li>✓ Instant Cash Payments</li>
-                <li>✓ Honest Weighing</li>
-              </ul>
+          <div className="hero-content fade-up">
+            <div className="hero-tag">Trusted Transport Partner</div>
+            <h1>Moving India's Cargo with <span className="highlight">Speed & Safety</span></h1>
+            <p>Triveni Road Lines provides reliable road transport, fleet management, and logistics solutions across 25+ states. From single consignments to full fleet operations.</p>
+            <div className="hero-btns">
+              <button className="btn-primary" onClick={() => navigateTo('CONTACT')}>Book Your Transport</button>
+              <button className="btn-outline" onClick={() => navigateTo('FLEET')}>Explore Our Fleet</button>
             </div>
-            
-            <div className="feature-box fade-in-up delay-2">
-              <div className="feature-icon">🛒</div>
-              <h3 className="text-2xl font-bold playfair mb-4">For Bulk Buyers (Vyapari)</h3>
-              <p className="text-muted leading-relaxed mb-6">Retailers, hoteliers, and wholesale vendors rely on us for daily fresh stock. We source directly from the finest local farms with consistent volume availability.</p>
-              <ul className="text-left text-sm font-bold text-green-dark flex flex-col gap-2 mx-auto" style={{ maxWidth: '200px' }}>
-                <li>✓ Bulk Quantity Supply</li>
-                <li>✓ Quality Segregation</li>
-                <li>✓ Daily Fresh Arrivals</li>
-              </ul>
+            <div className="hero-stats">
+              <div className="hero-stat"><h3>500+</h3><p>Trucks</p></div>
+              <div className="hero-stat"><h3>25+</h3><p>States</p></div>
+              <div className="hero-stat"><h3>15+</h3><p>Years</p></div>
+              <div className="hero-stat"><h3>10K+</h3><p>Deliveries/Month</p></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Top Commodities Sneak Peek */}
-      <section className="container py-20">
-        <div className="flex justify-between items-end mb-12 fade-in-up">
-          <div>
-            <h2 className="text-4xl font-black playfair mb-2">Top Traded Commodities</h2>
-            <p className="text-lg text-muted">A glimpse of our major daily wholesale items.</p>
+      {/* Services Preview */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header fade-up">
+            <div className="section-label">What We Do</div>
+            <h2 className="section-title">Our Core Services</h2>
+            <p className="section-desc">End-to-end transport and logistics solutions tailored for businesses of every scale.</p>
           </div>
-          <button className="btn btn-outline" onClick={() => navigateTo('COMMODITIES')}>View All →</button>
-        </div>
-        
-        <div className="grid grid-cols-4 gap-6">
-          {commoditiesData.slice(0, 4).map((item, idx) => (
-            <div key={item.id} className={`commodity-card fade-in-up delay-${idx%4}`}>
-              <div className="emoji-circle">{item.emoji}</div>
-              <span className={`badge ${idx%2===0 ? 'badge-orange' : 'badge-green'}`}>{item.badge}</span>
-              <h3 className="text-xl font-bold playfair mb-2">{item.name}</h3>
-              <p className="text-sm text-muted mb-6">{item.category}</p>
-            </div>
-          ))}
+          <div className="services-grid">
+            {servicesData.slice(0, 3).map((s, i) => (
+              <div key={s.id} className={`service-card fade-up d${i + 1}`}>
+                <div className="service-icon">{s.icon}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button className="btn-outline" onClick={() => navigateTo('SERVICES')}>View All Services →</button>
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* Why Choose Us */}
+      <section className="section" style={{ background: 'var(--navy-light)' }}>
+        <div className="container">
+          <div className="section-header fade-up">
+            <div className="section-label">Why Triveni</div>
+            <h2 className="section-title">Why Businesses Trust Us</h2>
+          </div>
+          <div className="why-grid">
+            {[
+              { icon: '⏱️', title: 'On-Time Delivery', desc: '98.5% on-time delivery rate across all routes nationwide.' },
+              { icon: '📡', title: 'Live GPS Tracking', desc: 'Real-time vehicle tracking with instant status updates.' },
+              { icon: '🛡️', title: 'Cargo Insurance', desc: 'Full transit insurance coverage for complete peace of mind.' },
+              { icon: '💰', title: 'Best Rates', desc: 'Competitive pricing with transparent billing, no hidden charges.' },
+            ].map((w, i) => (
+              <div key={i} className={`why-card fade-up d${i + 1}`}>
+                <div className="why-icon">{w.icon}</div>
+                <h4>{w.title}</h4>
+                <p>{w.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Routes */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header fade-up">
+            <div className="section-label">Coverage</div>
+            <h2 className="section-title">Our Major Routes</h2>
+            <p className="section-desc">Pan-India road network connecting every major industrial hub and metro city.</p>
+          </div>
+          <div className="route-tags fade-up d2">
+            {routes.map((r, i) => <span key={i} className="route-tag">{r}</span>)}
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted By */}
+      <section className="section" style={{ background: 'var(--navy-light)' }}>
+        <div className="container">
+          <div className="section-header fade-up">
+            <div className="section-label">Clientele</div>
+            <h2 className="section-title">Trusted by Leading Brands</h2>
+            <p className="section-desc">From FMCG to heavy industries — businesses across sectors rely on Triveni Road Lines for their logistics.</p>
+          </div>
+          <div className="why-grid fade-up d1">
+            {[
+              { icon: '🏭', title: 'Manufacturing', desc: 'Steel, cement, and machinery transport with ODC capability.' },
+              { icon: '🛒', title: 'FMCG & Retail', desc: 'Daily dispatches for consumer goods and retail chains.' },
+              { icon: '🏗️', title: 'Infrastructure', desc: 'Project cargo for construction and engineering firms.' },
+              { icon: '🌾', title: 'Agriculture', desc: 'Cold chain and bulk transport for agri commodities.' },
+            ].map((c, i) => (
+              <div key={i} className={`why-card fade-up d${i + 1}`}>
+                <div className="why-icon">{c.icon}</div>
+                <h4>{c.title}</h4>
+                <p>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
-// --- COMMODITIES PAGE ---
-function CommoditiesPage({ handleEnquire }) {
-  const [activeCategory, setActiveCategory] = useState('All');
-
-  const filteredData = activeCategory === 'All' 
-    ? commoditiesData 
-    : commoditiesData.filter(c => c.category === activeCategory);
-
+/* ===================== SERVICES PAGE ===================== */
+function ServicesPage() {
   return (
-    <div className="bg-white py-12">
-      <div className="container">
-        <div className="text-center max-w-3xl mx-auto mb-16 fade-in-up">
-          <h1 className="text-5xl font-black playfair mb-6">Our Commodities</h1>
-          <p className="text-lg text-muted">Explore the range of fresh agricultural produce we trade daily. We deal strictly in wholesale quantities (sacks/crates/tons).</p>
-        </div>
-
-        {/* Categories Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16 fade-in-up delay-1">
-          <button 
-            className={`btn ${activeCategory === 'All' ? 'btn-primary' : 'bg-green-pale text-green-dark hover:bg-green-dark hover:text-white'}`}
-            onClick={() => setActiveCategory('All')}
-          >
-            All Items
-          </button>
-          {categories.map(cat => (
-            <button 
-              key={cat} 
-              className={`btn ${activeCategory === cat ? 'btn-primary' : 'bg-green-pale text-green-dark hover:bg-green-dark hover:text-white'}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {/* Commodities Grid */}
-        <div className="grid grid-cols-3 gap-8">
-          {filteredData.map((item, idx) => (
-            <div key={item.id} className="commodity-card fade-in-up" style={{ animationDelay: `${(idx%3)*0.1}s` }}>
-              <div className="emoji-circle">{item.emoji}</div>
-              <span className={`badge ${item.badge === 'Top Traded' ? 'badge-orange' : 'badge-green'}`}>{item.badge}</span>
-              <h3 className="text-2xl font-bold playfair mb-2">{item.name}</h3>
-              <p className="text-sm font-bold text-green-dark mb-4">{item.category}</p>
-              <p className="text-muted leading-relaxed mb-8 flex-grow">{item.desc}</p>
-              <button className="btn btn-outline w-full" onClick={() => handleEnquire(item.name)}>Enquire Today's Rate</button>
-            </div>
-          ))}
-        </div>
+    <>
+      <div className="about-hero">
+        <h1 className="fade-up">Our Services</h1>
+        <p className="fade-up d1">Comprehensive transport and logistics solutions built for reliability and scale.</p>
       </div>
-    </div>
+      <section className="section">
+        <div className="container">
+          <div className="services-grid">
+            {servicesData.map((s, i) => (
+              <div key={s.id} className={`service-card fade-up d${(i % 3) + 1}`}>
+                <div className="service-icon">{s.icon}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="section" style={{ background: 'var(--navy-light)' }}>
+        <div className="container">
+          <div className="section-header fade-up">
+            <div className="section-label">Process</div>
+            <h2 className="section-title">How It Works</h2>
+          </div>
+          <div className="why-grid">
+            {[
+              { icon: '📞', title: '1. Request Quote', desc: 'Share your pickup, drop, and cargo details with our team.' },
+              { icon: '✅', title: '2. Get Confirmation', desc: 'Receive competitive pricing and vehicle assignment within hours.' },
+              { icon: '🚛', title: '3. Pickup & Transit', desc: 'Our driver picks up cargo and you track it live via GPS.' },
+              { icon: '📦', title: '4. Safe Delivery', desc: 'Cargo delivered on time with signed POD and digital receipt.' },
+            ].map((s, i) => (
+              <div key={i} className={`why-card fade-up d${i + 1}`}>
+                <div className="why-icon">{s.icon}</div>
+                <h4>{s.title}</h4>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
-// --- ABOUT PAGE ---
+/* ===================== FLEET PAGE ===================== */
+function FleetPage() {
+  return (
+    <>
+      <div className="about-hero">
+        <h1 className="fade-up">Our Fleet</h1>
+        <p className="fade-up d1">A diverse range of well-maintained vehicles ready for any cargo requirement.</p>
+      </div>
+      <section className="section">
+        <div className="container">
+          <div className="fleet-grid">
+            {fleetData.map((v, i) => (
+              <div key={v.id} className={`fleet-card fade-up d${(i % 3) + 1}`}>
+                <div className="fleet-img">{v.emoji}</div>
+                <div className="fleet-info">
+                  <h3>{v.name}</h3>
+                  <p>{v.type}</p>
+                  <div className="fleet-specs">
+                    {v.specs.map((s, j) => <span key={j} className="fleet-spec">{s}</span>)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+
+/* ===================== ABOUT PAGE ===================== */
 function AboutPage({ navigateTo }) {
   return (
-    <div>
-      <div className="bg-green-dark text-white py-24 text-center">
-        <h1 className="text-6xl font-black playfair mb-6">The Aadhti You Can Trust</h1>
-        <p className="text-xl opacity-80 max-w-2xl mx-auto">Decades of legacy in building fair and transparent trade networks between farmers and buyers.</p>
+    <>
+      <div className="about-hero">
+        <h1 className="fade-up">About Triveni Road Lines</h1>
+        <p className="fade-up d1">Decades of trust, thousands of deliveries, one commitment — your cargo, on time, every time.</p>
       </div>
-      
-      <div className="container py-20 grid grid-cols-2 gap-16 items-center">
-        <div className="fade-in-up">
-          <h2 className="text-4xl font-bold playfair mb-6">Our Legacy in the Mandi</h2>
-          <p className="text-lg text-muted mb-4 leading-relaxed">
-            Started by our ancestors, Triveniroadlines.in has been a prominent name in the wholesale vegetable market. We operate as a vital bridge in the agricultural supply chain.
-          </p>
-          <p className="text-lg text-muted mb-8 leading-relaxed">
-            Our principle is simple: provide the fairest auction rates for the hardworking farmers while ensuring quality and bulk availability for the vendors who feed the city. Trust is our biggest commodity.
-          </p>
-          <button className="btn btn-primary" onClick={() => navigateTo('CONTACT')}>Visit Our Shop</button>
+      <section className="section">
+        <div className="container">
+          <div className="stats-grid fade-up">
+            {[
+              { val: '500+', label: 'Owned Trucks' },
+              { val: '15+', label: 'Years Experience' },
+              { val: '25+', label: 'States Covered' },
+              { val: '98.5%', label: 'On-Time Rate' },
+            ].map((s, i) => (
+              <div key={i} className="stat-card">
+                <h3>{s.val}</h3>
+                <p>{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="about-content">
+            <div className="about-text fade-up">
+              <h2>Built on Trust, Driven by Commitment</h2>
+              <p>Triveni Road Lines was founded in 2010 with a small fleet of 5 trucks operating on the Delhi-Mumbai corridor. Today, we are one of North India's fastest-growing road transport companies with a fleet of 500+ vehicles covering 25+ states.</p>
+              <p>Our mission is to deliver cargo safely, on time, and at competitive rates — while building long-term partnerships with businesses who depend on us.</p>
+              <ul className="values-list">
+                <li>On-time delivery with live GPS tracking</li>
+                <li>Fully insured cargo with damage-free guarantee</li>
+                <li>Dedicated fleet managers for key accounts</li>
+                <li>24/7 control room for real-time support</li>
+                <li>Transparent billing with no hidden costs</li>
+              </ul>
+            </div>
+            <div className="why-grid fade-up d2" style={{ gridTemplateColumns: '1fr 1fr' }}>
+              {[
+                { icon: '🎯', title: 'Our Mission', desc: 'Deliver every consignment safely, on time, at the best rate.' },
+                { icon: '👁️', title: 'Our Vision', desc: 'Become India\'s most trusted road logistics partner by 2030.' },
+                { icon: '🤝', title: 'Our Values', desc: 'Integrity, reliability, customer-first approach in every load.' },
+                { icon: '🏆', title: 'Our Promise', desc: 'Your cargo is our responsibility from pickup to delivery.' },
+              ].map((v, i) => (
+                <div key={i} className="why-card">
+                  <div className="why-icon">{v.icon}</div>
+                  <h4>{v.title}</h4>
+                  <p>{v.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        
-        <div className="grid grid-cols-2 gap-6 fade-in-up delay-1">
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-            <div className="text-5xl font-black playfair text-green-dark mb-2">500+</div>
-            <div className="font-bold text-muted uppercase text-sm tracking-wider">Farmers Connected</div>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center transform translate-y-6">
-            <div className="text-5xl font-black playfair text-green-dark mb-2">15+</div>
-            <div className="font-bold text-muted uppercase text-sm tracking-wider">Years Experience</div>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-            <div className="text-5xl font-black playfair text-green-dark mb-2">50+</div>
-            <div className="font-bold text-muted uppercase text-sm tracking-wider">Daily Bulk Buyers</div>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center transform translate-y-6">
-            <div className="text-5xl font-black playfair text-green-dark mb-2">100%</div>
-            <div className="font-bold text-muted uppercase text-sm tracking-wider">Transparent Payments</div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
 
-// --- CONTACT PAGE ---
-function ContactPage({ enquiryCommodity }) {
-  const [form, setForm] = useState({ name: '', phone: '', userType: 'Bulk Buyer', message: enquiryCommodity ? `I would like to know today's wholesale rate and availability for ${enquiryCommodity}.` : '' });
+/* ===================== CONTACT / QUOTE PAGE ===================== */
+function ContactPage() {
+  const [form, setForm] = useState({ name: '', phone: '', email: '', pickup: '', drop: '', cargo: '', weight: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(form.name && form.phone) {
-      setSubmitted(true);
-    }
+    if (form.name && form.phone && form.pickup && form.drop) setSubmitted(true);
   };
 
+  const update = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
   return (
-    <div className="container py-20">
-      <div className="text-center max-w-2xl mx-auto mb-16 fade-in-up">
-        <h1 className="text-5xl font-black playfair mb-6">Trade With Us</h1>
-        <p className="text-lg text-muted">Whether you are a farmer looking to sell your harvest or a vendor looking for bulk supplies, we are here for you.</p>
+    <>
+      <div className="about-hero">
+        <h1 className="fade-up">Book Your Shipment</h1>
+        <p className="fade-up d1">Tell us your pickup & drop details — our team will connect with you within 2 hours.</p>
       </div>
-      
-      <div className="grid grid-cols-2 gap-16 max-w-5xl mx-auto">
-        <div className="fade-in-up delay-1">
-          <h3 className="text-3xl font-bold playfair mb-8">Contact Details</h3>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-6 flex gap-4 items-start">
-            <div className="text-4xl">📍</div>
-            <div>
-              <h4 className="font-bold text-xl mb-2">Mandi Shop Address</h4>
-              <p className="text-muted leading-relaxed">Shop No. 45, Block A<br/>Main Wholesale Sabzi Mandi<br/>Kanpur, Uttar Pradesh 208001</p>
-            </div>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-6 flex gap-4 items-center">
-            <div className="text-4xl">📞</div>
-            <div>
-              <h4 className="font-bold text-xl mb-1">Phone Number</h4>
-              <p className="text-muted">+91 98765 43210 <span className="text-sm">(Available 5 AM to 5 PM)</span></p>
-            </div>
-          </div>
-          
-          <div className="bg-green-pale border border-green-mid p-6 rounded-lg">
-            <h4 className="font-bold text-green-dark mb-2">Mandi Timings</h4>
-            <p className="text-sm text-green-dark font-bold">Morning Auctions: 5:00 AM - 10:00 AM</p>
-            <p className="text-sm text-green-dark font-bold">General Trade: 10:00 AM - 5:00 PM</p>
-          </div>
-        </div>
+      <section className="section">
+        <div className="container">
+          <div className="contact-grid">
+            <div className="fade-up">
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem', fontFamily: 'Outfit, sans-serif' }}>Contact Information</h3>
 
-        <div className="bg-white p-10 rounded-lg shadow-md fade-in-up delay-2">
-          {submitted ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-6">✅</div>
-              <h3 className="text-3xl font-bold playfair mb-4">Request Received!</h3>
-              <p className="text-muted mb-8">Thank you, {form.name}. Our team will call you shortly on {form.phone} with the required information.</p>
-              <button className="btn btn-outline" onClick={() => { setSubmitted(false); setForm({name:'', phone:'', userType:'Bulk Buyer', message:''}); }}>Send Another Enquiry</button>
+              <div className="contact-info-card">
+                <div className="contact-info-icon">📍</div>
+                <div><h4>Head Office</h4><p>Transport Nagar, GT Road, Kanpur, UP 208023</p></div>
+              </div>
+              <div className="contact-info-card">
+                <div className="contact-info-icon">📞</div>
+                <div><h4>Phone</h4><p>+91 98765 43210 (24/7 Control Room)</p></div>
+              </div>
+              <div className="contact-info-card">
+                <div className="contact-info-icon">✉️</div>
+                <div><h4>Email</h4><p>info@triveniroadlines.in</p></div>
+              </div>
+              <div className="contact-info-card">
+                <div className="contact-info-icon">⏰</div>
+                <div><h4>Working Hours</h4><p>Mon–Sat: 8:00 AM – 9:00 PM | Sun: Emergency Only</p></div>
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-              <h3 className="text-3xl font-black playfair text-center mb-6">Enquire Rates / Trade</h3>
-              
-              <div className="px-2">
-                <label className="block text-sm font-bold mb-2 text-muted">I am a...</label>
-                <div className="flex gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="userType" checked={form.userType === 'Farmer'} onChange={() => setForm({...form, userType: 'Farmer'})} /> Farmer (Kisan)
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="userType" checked={form.userType === 'Bulk Buyer'} onChange={() => setForm({...form, userType: 'Bulk Buyer'})} /> Bulk Buyer (Vyapari)
-                  </label>
+
+            <div className="quote-form fade-up d2">
+              {submitted ? (
+                <div className="success-msg">
+                  <div className="icon">✅</div>
+                  <h3>Enquiry Sent Successfully!</h3>
+                  <p>Thank you, {form.name}. Our logistics team will call you on {form.phone} within 2 hours with the best rates.</p>
+                  <button className="btn-outline" onClick={() => { setSubmitted(false); setForm({ name: '', phone: '', email: '', pickup: '', drop: '', cargo: '', weight: '', message: '' }); }}>Send Another Enquiry</button>
                 </div>
-              </div>
-
-              <div>
-                <input type="text" placeholder="Full Name *" value={form.name} onChange={e=>setForm({...form, name: e.target.value})} required />
-              </div>
-              
-              <div>
-                <input type="tel" placeholder="Phone Number *" value={form.phone} onChange={e=>setForm({...form, phone: e.target.value})} required />
-              </div>
-              
-              <div>
-                <textarea rows="4" placeholder="Message / Commodity you are looking for..." value={form.message} onChange={e=>setForm({...form, message: e.target.value})} required></textarea>
-              </div>
-              
-              <button type="submit" className="btn btn-primary w-full py-4 text-lg mt-2">Send Enquiry</button>
-            </form>
-          )}
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <h3>Tell Us Your Requirement</h3>
+                  <div className="form-row">
+                    <div className="form-group"><label>Full Name *</label><input className="form-input" placeholder="Your name" value={form.name} onChange={update('name')} required /></div>
+                    <div className="form-group"><label>Phone *</label><input className="form-input" placeholder="+91..." value={form.phone} onChange={update('phone')} required /></div>
+                  </div>
+                  <div className="form-group"><label>Email</label><input className="form-input" type="email" placeholder="email@example.com" value={form.email} onChange={update('email')} /></div>
+                  <div className="form-row">
+                    <div className="form-group"><label>Pickup City *</label><input className="form-input" placeholder="e.g. Delhi" value={form.pickup} onChange={update('pickup')} required /></div>
+                    <div className="form-group"><label>Drop City *</label><input className="form-input" placeholder="e.g. Mumbai" value={form.drop} onChange={update('drop')} required /></div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group"><label>Cargo Type</label><input className="form-input" placeholder="e.g. Machinery" value={form.cargo} onChange={update('cargo')} /></div>
+                    <div className="form-group"><label>Weight (Approx)</label><input className="form-input" placeholder="e.g. 10 Ton" value={form.weight} onChange={update('weight')} /></div>
+                  </div>
+                  <div className="form-group"><label>Additional Details</label><textarea className="form-input" rows="3" placeholder="Any special requirements..." value={form.message} onChange={update('message')}></textarea></div>
+                  <button type="submit" className="form-submit">Send Enquiry</button>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 }
