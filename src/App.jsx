@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
+import logo from './assets/logo.png';
 
 const servicesData = [
   { id: 1, icon: '🚛', title: 'Full Truck Load (FTL)', desc: 'Dedicated trucks for large shipments across India. Door-to-door delivery with real-time tracking and guaranteed timelines.' },
@@ -27,8 +28,21 @@ const routes = [
 
 export default function App() {
   const [page, setPage] = useState('HOME');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
 
-  useEffect(() => { window.scrollTo(0, 0); }, [page]);
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+  }, [theme]);
+
+  useEffect(() => { 
+    window.scrollTo(0, 0); 
+    setIsMobileMenuOpen(false);
+  }, [page]);
 
   const navigateTo = (p) => setPage(p);
 
@@ -38,20 +52,29 @@ export default function App() {
       <nav className="navbar">
         <div className="container">
           <div className="nav-brand" onClick={() => navigateTo('HOME')}>
-            <div className="nav-brand-icon">TR</div>
+            <img src={logo} alt="Triveni Road Lines" className="nav-brand-logo" />
             <div>
               <h2>Triveni Road Lines</h2>
               <span>Transport & Logistics</span>
             </div>
           </div>
-          <div className="nav-links">
+          <div className={`nav-links ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
             {['HOME','SERVICES','FLEET','ABOUT','CONTACT'].map(p => (
               <button key={p} className={`nav-link ${page === p ? 'active' : ''}`} onClick={() => navigateTo(p)}>
                 {p.charAt(0) + p.slice(1).toLowerCase()}
               </button>
             ))}
+            <button className="nav-cta mobile-only" onClick={() => navigateTo('CONTACT')}>Book Now</button>
           </div>
-          <button className="nav-cta" onClick={() => navigateTo('CONTACT')}>Book Now</button>
+          <div className="nav-actions">
+            <button className="theme-toggle" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Toggle theme">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+            <button className="nav-cta desktop-only" onClick={() => navigateTo('CONTACT')}>Book Now</button>
+            <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -79,7 +102,7 @@ export default function App() {
           <div className="footer-grid">
             <div className="footer-brand">
               <div className="footer-brand-top">
-                <div className="footer-brand-logo">TR</div>
+                <img src={logo} alt="Triveni Road Lines" className="footer-brand-img" />
                 <h3>Triveni Road Lines</h3>
               </div>
               <p>Your trusted partner for road transport and logistics solutions across India. Delivering reliability, speed, and safety since 2010.</p>
