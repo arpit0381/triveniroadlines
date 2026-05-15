@@ -240,7 +240,7 @@ function HomePage({ navigateTo }) {
 function ServicesPage({ navigateTo }) {
   return (
     <>
-      <div className="about-hero">
+      <div className="about-hero bg-services">
         <h1 className="fade-up">Our Services</h1>
         <p className="fade-up d1">Comprehensive transport and logistics solutions built for reliability and scale.</p>
       </div>
@@ -289,7 +289,7 @@ function ServicesPage({ navigateTo }) {
 function FleetPage() {
   return (
     <>
-      <div className="about-hero">
+      <div className="about-hero bg-fleet">
         <h1 className="fade-up">Our Fleet</h1>
         <p className="fade-up d1">A diverse range of well-maintained vehicles ready for any cargo requirement.</p>
       </div>
@@ -320,7 +320,7 @@ function FleetPage() {
 function AboutPage({ navigateTo }) {
   return (
     <>
-      <div className="about-hero">
+      <div className="about-hero bg-about">
         <h1 className="fade-up">About Triveni Road Lines</h1>
         <p className="fade-up d1">Decades of trust, thousands of deliveries, one commitment — your cargo, on time, every time.</p>
       </div>
@@ -388,7 +388,7 @@ function ContactPage() {
 
   return (
     <>
-      <div className="about-hero">
+      <div className="about-hero bg-contact">
         <h1 className="fade-up">Book Your Shipment</h1>
         <p className="fade-up d1">Tell us your pickup & drop details — our team will connect with you within 2 hours.</p>
       </div>
