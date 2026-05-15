@@ -232,7 +232,10 @@ body.light-theme .logo-roadlines {
   }
 }
 
-/* Fix for fixed navbar overlap with hero section */
-.hero {
+/* Fix for fixed navbar overlap on all pages */
+.hero,
+.about-hero,
+main > div > section:first-of-type,
+main > section:first-of-type {
   padding-top: clamp(120px, 16vh, 150px) !important;
 }
