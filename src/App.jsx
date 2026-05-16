@@ -240,9 +240,11 @@ function HomePage({ navigateTo }) {
 function ServicesPage({ navigateTo }) {
   return (
     <>
-      <div className="about-hero bg-services">
-        <h1 className="fade-up">Our Services</h1>
-        <p className="fade-up d1">Comprehensive transport and logistics solutions built for reliability and scale.</p>
+      <div className="about-hero bg-services-custom">
+        <div className="glass-hero-content fade-up">
+          <h1>Our Services</h1>
+          <p className="d1">Comprehensive transport and logistics solutions built for reliability and scale.</p>
+        </div>
       </div>
       <section className="section">
         <div className="container">
