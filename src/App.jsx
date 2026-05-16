@@ -113,7 +113,7 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           {servicesData.map(s => (
-             <Route key={s.id} path={`/services/${s.id}`} element={<ServiceDetailPage service={s} />} />
+            <Route key={s.id} path={`/services/${s.id}`} element={<ServiceDetailPage service={s} />} />
           ))}
         </Routes>
       </main>
@@ -344,7 +344,7 @@ function AboutPage() {
     <>
       <Helmet>
         <title>About Triveni Road Lines | Best Transport Company in Kanpur</title>
-        <meta name="description" content="Founded by Pavan Kumar Dwivedi, Triveni Road Lines has 15+ years of experience delivering cargo safely across 25+ states in India." />
+        <meta name="description" content="Founded by Pawan Kumar Dwivedi, Triveni Road Lines has 15+ years of experience delivering cargo safely across 25+ states in India." />
         <link rel="canonical" href="https://triveniroadlines.in/about" />
       </Helmet>
       <div className="about-hero bg-about">
