@@ -326,6 +326,28 @@ function AboutPage({ navigateTo }) {
         <h1 className="fade-up">About Triveni Road Lines</h1>
         <p className="fade-up d1">Decades of trust, thousands of deliveries, one commitment — your cargo, on time, every time.</p>
       </div>
+
+      {/* Founder Section */}
+      <section className="section founder-section">
+        <div className="container">
+          <div className="founder-card fade-up">
+            <div className="founder-image-wrapper">
+              <img src="/pawan .jpeg" alt="Pawan Kumar Diwedi" className="founder-img" />
+              <div className="founder-glow"></div>
+            </div>
+            <div className="founder-info">
+              <div className="founder-badge">Leadership</div>
+              <h2>Pawan Kumar Diwedi</h2>
+              <h4 className="founder-title">Founder &amp; Owner, Triveni Roadlines</h4>
+              <div className="founder-divider"></div>
+              <p className="founder-quote">"Logistics is not just about moving goods from point A to B. It's about moving trust. When a client hands over their cargo, they hand over their reputation. We honor that trust with every single delivery."</p>
+              <p className="founder-desc">With over 15 years of ground-level experience in the Indian transport sector, Pawan Kumar Diwedi has built Triveni Roadlines from a small local fleet into a nationwide logistics powerhouse. His visionary leadership, unwavering commitment to transparency, and deep understanding of supply chain challenges have made Triveni a trusted partner for businesses across 25+ states.</p>
+              <div className="founder-signature">P.K. Diwedi</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section">
         <div className="container">
           <div className="stats-grid fade-up">
