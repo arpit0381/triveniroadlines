@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './index.css';
 import logo from './assets/logo.png';
-
 const servicesData = [
   { id: 1, icon: '🚛', title: 'Full Truck Load (FTL)', desc: 'Dedicated trucks for large shipments across India. Door-to-door delivery with real-time tracking and guaranteed timelines.' },
   { id: 2, icon: '📦', title: 'Part Truck Load (PTL)', desc: 'Cost-effective shared trucking for smaller consignments. Consolidated loads with scheduled departures on all major routes.' },
@@ -77,10 +78,9 @@ function LoadingSplash({ visible }) {
 }
 
 export default function App() {
-  const [page, setPage] = useState('HOME');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 2200);
@@ -97,36 +97,43 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsMobileMenuOpen(false);
-  }, [page]);
-
-  const navigateTo = (p) => setPage(p);
+  }, [location.pathname]);
 
   return (
     <>
       <LoadingSplash visible={loading} />
       {/* Navbar */}
-      <Navbar page={page} setPage={setPage} theme={theme} setTheme={setTheme} />
+      <Navbar theme={theme} setTheme={setTheme} />
 
       <main>
-        {page === 'HOME' && <HomePage navigateTo={navigateTo} />}
-        {page === 'SERVICES' && <ServicesPage navigateTo={navigateTo} />}
-        {page === 'FLEET' && <FleetPage />}
-        {page === 'ABOUT' && <AboutPage navigateTo={navigateTo} />}
-        {page === 'CONTACT' && <ContactPage />}
-        {page.startsWith('SERVICE_') && <ServiceDetailPage service={servicesData.find(s => `SERVICE_${s.id}` === page)} navigateTo={navigateTo} />}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/fleet" element={<FleetPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          {servicesData.map(s => (
+             <Route key={s.id} path={`/services/${s.id}`} element={<ServiceDetailPage service={s} />} />
+          ))}
+        </Routes>
       </main>
 
       {/* Footer */}
-      <Footer navigateTo={navigateTo} />
+      <Footer />
     </>
   );
 }
 
 /* ===================== HOME PAGE ===================== */
-function HomePage({ navigateTo }) {
+function HomePage() {
+  const navigate = useNavigate();
   return (
     <>
+      <Helmet>
+        <title>Triveni Road Lines | Best Transport Company in Chakarpur Mandi Kanpur</title>
+        <meta name="description" content="Triveni Road Lines is a trusted transport and logistics company in Chakarpur Mandi, Kanpur offering safe, fast and affordable goods transportation across India." />
+        <link rel="canonical" href="https://triveniroadlines.in/" />
+      </Helmet>
       <section className="hero">
         <div className="container">
           <div className="hero-content fade-up">
@@ -134,8 +141,8 @@ function HomePage({ navigateTo }) {
             <h1>Moving India's Cargo with <span className="highlight">Speed & Safety</span></h1>
             <p>Triveni Road Lines provides reliable road transport, fleet management, and logistics solutions across 25+ states. From single consignments to full fleet operations.</p>
             <div className="hero-btns">
-              <button className="btn-primary" onClick={() => navigateTo('CONTACT')}>Book Your Transport</button>
-              <button className="btn-outline" onClick={() => navigateTo('FLEET')}>Explore Our Fleet</button>
+              <button className="btn-primary" onClick={() => navigate('/contact')}>Book Your Transport</button>
+              <button className="btn-outline" onClick={() => navigate('/fleet')}>Explore Our Fleet</button>
             </div>
             <div className="hero-stats">
               <div className="hero-stat"><h3>500+</h3><p>Trucks</p></div>
@@ -157,7 +164,7 @@ function HomePage({ navigateTo }) {
           </div>
           <div className="services-grid">
             {servicesData.slice(0, 3).map((s, i) => (
-              <div key={s.id} className={`service-card fade-up d${i + 1}`} onClick={() => navigateTo(`SERVICE_${s.id}`)} style={{ cursor: 'pointer' }}>
+              <div key={s.id} className={`service-card fade-up d${i + 1}`} onClick={() => navigate(`/services/${s.id}`)} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
@@ -165,7 +172,7 @@ function HomePage({ navigateTo }) {
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <button className="btn-outline" onClick={() => navigateTo('SERVICES')}>View All Services →</button>
+            <button className="btn-outline" onClick={() => navigate('/services')}>View All Services →</button>
           </div>
         </div>
       </section>
@@ -237,9 +244,15 @@ function HomePage({ navigateTo }) {
 }
 
 /* ===================== SERVICES PAGE ===================== */
-function ServicesPage({ navigateTo }) {
+function ServicesPage() {
+  const navigate = useNavigate();
   return (
     <>
+      <Helmet>
+        <title>Transport & Logistics Services | Full Truck Load & Part Load</title>
+        <meta name="description" content="Explore our comprehensive logistics solutions including FTL, PTL, ODC transport, and Pan India goods transportation. Professional, safe, and fast." />
+        <link rel="canonical" href="https://triveniroadlines.in/services" />
+      </Helmet>
       <div className="about-hero bg-services-custom">
         <div className="glass-hero-content fade-up">
           <h1>Our Services</h1>
@@ -250,7 +263,7 @@ function ServicesPage({ navigateTo }) {
         <div className="container">
           <div className="services-grid">
             {servicesData.map((s, i) => (
-              <div key={s.id} className={`service-card fade-up d${(i % 3) + 1}`} onClick={() => navigateTo(`SERVICE_${s.id}`)} style={{ cursor: 'pointer' }}>
+              <div key={s.id} className={`service-card fade-up d${(i % 3) + 1}`} onClick={() => navigate(`/services/${s.id}`)} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
@@ -291,6 +304,11 @@ function ServicesPage({ navigateTo }) {
 function FleetPage() {
   return (
     <>
+      <Helmet>
+        <title>Our Transport Fleet | Tata Prima & BharatBenz Trucks</title>
+        <meta name="description" content="Explore Triveni Road Lines' modern fleet of Tata Prima, BharatBenz, and specialized ODC trailers ready for pan-India logistics." />
+        <link rel="canonical" href="https://triveniroadlines.in/fleet" />
+      </Helmet>
       <div className="about-hero bg-fleet">
         <h1 className="fade-up">Our Fleet</h1>
         <p className="fade-up d1">A diverse range of well-maintained vehicles ready for any cargo requirement.</p>
@@ -321,9 +339,14 @@ function FleetPage() {
 
 
 /* ===================== ABOUT PAGE ===================== */
-function AboutPage({ navigateTo }) {
+function AboutPage() {
   return (
     <>
+      <Helmet>
+        <title>About Triveni Road Lines | Best Transport Company in Kanpur</title>
+        <meta name="description" content="Founded by Pavan Kumar Dwivedi, Triveni Road Lines has 15+ years of experience delivering cargo safely across 25+ states in India." />
+        <link rel="canonical" href="https://triveniroadlines.in/about" />
+      </Helmet>
       <div className="about-hero bg-about">
         <h1 className="fade-up">About Triveni Road Lines</h1>
         <p className="fade-up d1">Decades of trust, thousands of deliveries, one commitment — your cargo, on time, every time.</p>
@@ -414,6 +437,11 @@ function ContactPage() {
 
   return (
     <>
+      <Helmet>
+        <title>Contact Us | Get a Transport Quote | Triveni Road Lines</title>
+        <meta name="description" content="Contact Triveni Road Lines in Chakarpur Mandi, Kanpur for fast, reliable, and affordable transport services. Book your truck today!" />
+        <link rel="canonical" href="https://triveniroadlines.in/contact" />
+      </Helmet>
       <div className="about-hero bg-contact">
         <h1 className="fade-up">Book Your Shipment</h1>
         <p className="fade-up d1">Tell us your pickup & drop details — our team will connect with you within 2 hours.</p>
@@ -487,10 +515,16 @@ function ContactPage() {
 }
 
 /* ===================== SERVICE DETAIL PAGE ===================== */
-function ServiceDetailPage({ service, navigateTo }) {
+function ServiceDetailPage({ service }) {
+  const navigate = useNavigate();
   if (!service) return null;
   return (
     <>
+      <Helmet>
+        <title>{service.title} | Triveni Road Lines</title>
+        <meta name="description" content={service.desc} />
+        <link rel="canonical" href={`https://triveniroadlines.in/services/${service.id}`} />
+      </Helmet>
       <div className="about-hero">
         <h1 className="fade-up">{service.title}</h1>
         <p className="fade-up d1">{service.desc}</p>
@@ -509,7 +543,7 @@ function ServiceDetailPage({ service, navigateTo }) {
                 <li>Cost-effective and timely execution</li>
               </ul>
               <div style={{ marginTop: '2rem' }}>
-                <button className="btn-primary" onClick={() => navigateTo('CONTACT')}>Book This Service</button>
+                <button className="btn-primary" onClick={() => navigate('/contact')}>Book This Service</button>
               </div>
             </div>
             <div className="why-grid fade-up d2" style={{ gridTemplateColumns: '1fr 1fr' }}>

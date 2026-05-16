@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
-export default function Navbar({ page, setPage, theme, setTheme }) {
+export default function Navbar({ theme, setTheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -20,43 +22,50 @@ export default function Navbar({ page, setPage, theme, setTheme }) {
     return () => document.body.classList.remove('no-scroll');
   }, [mobileMenuOpen]);
 
-  const navigateTo = (p) => {
+  const closeMenu = () => {
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setPage(p);
   };
 
-  const navLinks = ['HOME', 'SERVICES', 'FLEET', 'ABOUT', 'CONTACT'];
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Fleet', path: '/fleet' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' }
+  ];
 
   return (
     <nav className={`m-navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="m-navbar-container">
-        <div className="m-navbar-brand" onClick={() => navigateTo('HOME')}>
+        <Link to="/" className="m-navbar-brand" onClick={closeMenu} style={{ textDecoration: 'none' }}>
           <div className="mahindra-logo">
             <span className="logo-triveni">triveni</span>
             <span className="logo-roadlines">ROAD LINES</span>
           </div>
-        </div>
+        </Link>
 
         <div className={`m-navbar-links ${mobileMenuOpen ? 'open' : ''}`}>
-          {navLinks.map((p) => (
-            <button 
-              key={p} 
-              className={`m-nav-link ${page === p ? 'active' : ''}`} 
-              onClick={() => navigateTo(p)}
+          {navLinks.map((link) => (
+            <Link 
+              key={link.name} 
+              to={link.path}
+              className={`m-nav-link ${location.pathname === link.path ? 'active' : ''}`} 
+              onClick={closeMenu}
+              style={{ textDecoration: 'none' }}
             >
-              {p.charAt(0) + p.slice(1).toLowerCase()}
-            </button>
+              {link.name}
+            </Link>
           ))}
-          <button className="m-nav-cta mobile-only" onClick={() => navigateTo('CONTACT')}>
+          <Link to="/contact" className="m-nav-cta mobile-only" onClick={closeMenu} style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}>
             Book Now
-          </button>
+          </Link>
         </div>
 
         <div className="m-navbar-actions">
-          <button className="m-nav-cta desktop-only" onClick={() => navigateTo('CONTACT')}>
+          <Link to="/contact" className="m-nav-cta desktop-only" onClick={closeMenu} style={{ textDecoration: 'none' }}>
             Book Now
-          </button>
+          </Link>
           <button 
             className="m-theme-toggle" 
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 

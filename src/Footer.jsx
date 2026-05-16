@@ -1,16 +1,26 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
-export default function Footer({ navigateTo }) {
+export default function Footer() {
+  const scrollUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Fleet', path: '/fleet' },
+    { name: 'About', path: '/about' },
+    { name: 'Contact', path: '/contact' }
+  ];
+
   return (
     <footer className="m-footer">
       <div className="m-footer-container">
         <div className="m-footer-top">
           <div className="m-footer-brand">
-            <div className="mahindra-logo">
+            <Link to="/" onClick={scrollUp} style={{ textDecoration: 'none' }} className="mahindra-logo">
               <span className="logo-triveni">triveni</span>
               <span className="logo-roadlines">ROAD LINES</span>
-            </div>
+            </Link>
             <p className="m-footer-desc">
               Your trusted partner for road transport and logistics solutions across India. Delivering reliability, speed, and safety since 2010.
             </p>
@@ -31,11 +41,11 @@ export default function Footer({ navigateTo }) {
             <div className="m-footer-col">
               <h4>Quick Links</h4>
               <ul>
-                {['HOME', 'SERVICES', 'FLEET', 'ABOUT', 'CONTACT'].map(p => (
-                  <li key={p}>
-                    <button onClick={() => navigateTo(p)}>
-                      {p.charAt(0) + p.slice(1).toLowerCase()}
-                    </button>
+                {navLinks.map(link => (
+                  <li key={link.name}>
+                    <Link to={link.path} onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>
+                      {link.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -44,11 +54,11 @@ export default function Footer({ navigateTo }) {
             <div className="m-footer-col">
               <h4>Services</h4>
               <ul>
-                <li><button onClick={() => navigateTo('SERVICE_1')}>Full Truck Load</button></li>
-                <li><button onClick={() => navigateTo('SERVICE_2')}>Part Truck Load</button></li>
-                <li><button onClick={() => navigateTo('SERVICE_3')}>ODC Transport</button></li>
-                <li><button onClick={() => navigateTo('SERVICE_4')}>Warehousing</button></li>
-                <li><button onClick={() => navigateTo('SERVICE_5')}>Fleet Management</button></li>
+                <li><Link to="/services/1" onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>Full Truck Load</Link></li>
+                <li><Link to="/services/2" onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>Part Truck Load</Link></li>
+                <li><Link to="/services/3" onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>ODC Transport</Link></li>
+                <li><Link to="/services/4" onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>Warehousing</Link></li>
+                <li><Link to="/services/5" onClick={scrollUp} style={{ background: 'none', border: 'none', color: 'inherit', padding: 0, cursor: 'pointer', textAlign: 'left', textDecoration: 'none' }}>Fleet Management</Link></li>
               </ul>
             </div>
           </div>
