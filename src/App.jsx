@@ -14,12 +14,12 @@ const servicesData = [
 ];
 
 const fleetData = [
-  { id: 1, emoji: '🚛', name: 'Tata Prima 4928', type: 'Heavy Duty Truck', specs: ['28 Ton', 'All India', 'GPS Enabled'] },
-  { id: 2, emoji: '🚚', name: 'Ashok Leyland 3520', type: 'Medium Duty Truck', specs: ['20 Ton', 'Regional', 'GPS Enabled'] },
-  { id: 3, emoji: '🛻', name: 'Eicher Pro 3019', type: 'Light Commercial', specs: ['10 Ton', 'City Routes', 'Fast Delivery'] },
-  { id: 4, emoji: '🚜', name: 'Multi-Axle Trailer', type: 'ODC Specialist', specs: ['50+ Ton', 'ODC Permit', 'Pilot Vehicle'] },
-  { id: 5, emoji: '📦', name: 'Container Carrier', type: '20ft / 40ft Containers', specs: ['20-30 Ton', 'Port Service', 'Sealed'] },
-  { id: 6, emoji: '🧊', name: 'Refrigerated Van', type: 'Cold Chain Logistics', specs: ['8 Ton', 'Temp Control', 'Perishables'] },
+  { id: 1, image: '/tata-prima.png', name: 'Tata Prima 4928', type: 'Heavy Duty Truck', specs: ['28 Ton', 'All India', 'GPS Enabled'] },
+  { id: 2, image: '/ashok-leyland.png', name: 'Ashok Leyland 3520', type: 'Medium Duty Truck', specs: ['20 Ton', 'Regional', 'GPS Enabled'] },
+  { id: 3, image: '/eicher-pro.png', name: 'Eicher Pro 3019', type: 'Light Commercial', specs: ['10 Ton', 'City Routes', 'Fast Delivery'] },
+  { id: 4, image: '/multi-axle.png', name: 'Multi-Axle Trailer', type: 'ODC Specialist', specs: ['50+ Ton', 'ODC Permit', 'Pilot Vehicle'] },
+  { id: 5, image: '/container-carrier.png', name: 'Container Carrier', type: '20ft / 40ft Containers', specs: ['20-30 Ton', 'Port Service', 'Sealed'] },
+  { id: 6, image: '/refrigerated-van.png', name: 'Refrigerated Van', type: 'Cold Chain Logistics', specs: ['8 Ton', 'Temp Control', 'Perishables'] },
 ];
 
 const routes = [
@@ -300,7 +300,9 @@ function FleetPage() {
           <div className="fleet-grid">
             {fleetData.map((v, i) => (
               <div key={v.id} className={`fleet-card fade-up d${(i % 3) + 1}`}>
-                <div className="fleet-img">{v.emoji}</div>
+                <div className="fleet-img">
+                  <img src={v.image} alt={v.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
                 <div className="fleet-info">
                   <h3>{v.name}</h3>
                   <p>{v.type}</p>
@@ -337,7 +339,7 @@ function AboutPage({ navigateTo }) {
             </div>
             <div className="founder-info">
               <div className="founder-badge">Leadership</div>
-              <h2>Pawan Kumar Diwedi</h2>
+              <h2>Pavan Kumar Dwivedi</h2>
               <h4 className="founder-title">Founder &amp; Owner, Triveni Roadlines</h4>
               <div className="founder-divider"></div>
               <p className="founder-quote">"Logistics is not just about moving goods from point A to B. It's about moving trust. When a client hands over their cargo, they hand over their reputation. We honor that trust with every single delivery."</p>
@@ -422,20 +424,28 @@ function ContactPage() {
             <div className="fade-up">
               <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem', fontFamily: 'Outfit, sans-serif' }}>Contact Information</h3>
 
-              <div className="contact-info-card">
-                <div className="contact-info-icon">📍</div>
+              <a href="https://maps.google.com/?q=A+19+chakarpur+mandi+kanpur" target="_blank" rel="noopener noreferrer" className="contact-info-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="contact-info-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
                 <div><h4>Head Office</h4><p>A 19 chakarpur mandi kanpur</p></div>
-              </div>
-              <div className="contact-info-card">
-                <div className="contact-info-icon">📞</div>
+              </a>
+              <a href="tel:+918853922538" className="contact-info-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="contact-info-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                </div>
                 <div><h4>Phone</h4><p>+91 88539 22538 (24/7 Control Room)</p></div>
-              </div>
-              <div className="contact-info-card">
-                <div className="contact-info-icon">✉️</div>
+              </a>
+              <a href="mailto:triveniroadlines.in@gmail.com" className="contact-info-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="contact-info-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                </div>
                 <div><h4>Email</h4><p>triveniroadlines.in@gmail.com</p></div>
-              </div>
+              </a>
               <div className="contact-info-card">
-                <div className="contact-info-icon">⏰</div>
+                <div className="contact-info-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
                 <div><h4>Working Hours</h4><p>Mon–Sat: 8:00 AM – 9:00 PM | Sun: Emergency Only</p></div>
               </div>
             </div>
